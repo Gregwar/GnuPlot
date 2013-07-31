@@ -8,6 +8,7 @@ $plot = new GnuPlot;
 
 $plot
     ->setXLabel('X')
+    ->setYRange(0, 20)
     ->setYLabel('Y')
     ->push(0, 1)
     ->push(1, 10)

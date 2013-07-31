@@ -28,6 +28,9 @@ class GnuPlot
     // Titles
     protected $titles;
 
+    // Y range scale
+    protected $yrange;
+
     // Gnuplot process
     protected $process;
     protected $stdin;
@@ -55,6 +58,17 @@ class GnuPlot
         $this->ylabel = null;
         $this->labels = array();
         $this->titles = array();
+        $this->yrange = null;
+    }
+
+    /**
+     * Sets the Y Range for values
+     */
+    public function setYRange($min, $max)
+    {
+        $this->yrange = array($min, $max);
+
+        return $this;
     }
 
     /**
@@ -115,6 +129,10 @@ class GnuPlot
         
         if ($this->ylabel) {
             $this->sendCommand('set ylabel "'.$this->ylabel.'"');
+        }
+
+        if ($this->yrange) {
+            $this->sendCommand('set yrange ['.$this->yrange[0].':'.$this->yrange[1].']');
         }
 
         foreach ($this->labels as $label) {
