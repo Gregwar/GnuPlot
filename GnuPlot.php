@@ -2,15 +2,10 @@
 
 namespace Gregwar\GnuPlot;
 
-require_once ('GnuPlotPipe.php');
-
 class GnuPlot
 {
     // Values as an array
     protected $values = array();
-
-    // Dimension of the Ys
-    protected $dimension = null;
 
     // Plot width
     protected $width = 1200;
@@ -18,17 +13,37 @@ class GnuPlot
     // Plot height
     protected $height = 800;
 
+    // Was it already plotted?
+    protected $plotted = false;
+
     // X Label
-    protected $xlabel = null;
+    protected $xlabel;
 
     // Y Label
-    protected $ylabel = null;
+    protected $ylabel;
 
     // Graph labels
-    protected $labels = array();
+    protected $labels;
 
     // Titles
-    protected $titles = array();
+    protected $titles;
+
+    // Gnuplot process
+    protected $process;
+    protected $stdin;
+    protected $stdout;
+
+    public function __construct()
+    {
+        $this->reset();
+        $this->openPipe();
+    }
+    
+    public function __destruct()
+    {
+        $this->sendCommand('quit');
+        proc_close($this->process);
+    }
 
     /**
      * Reset all the values
@@ -36,7 +51,6 @@ class GnuPlot
     public function reset()
     {
         $this->values = array();
-        $this->dimension = null;
         $this->xlabel = null;
         $this->ylabel = null;
         $this->labels = array();
@@ -47,21 +61,13 @@ class GnuPlot
      * Push a new data, $x is a number, $y can be a number or an array
      * of numbers
      */
-    public function push($x, $y)
+    public function push($x, $y, $index = 0)
     {
-        if (!is_array($y)) {
-            $y = array($y);
+        if (!isset($this->values[$index])) {
+            $this->values[$index] = array();
         }
 
-        if ($this->dimension === null) {
-            $this->dimension = count($y);
-        } else {
-            if (count($y) != $this->dimension) {
-                throw new \Exception('Bad dimension for push()');
-            }
-        }
-
-        $this->values["$x"] = $y;
+        $this->values[$index][] = array($x, $y);
 
         return $this;
     }
@@ -99,37 +105,35 @@ class GnuPlot
     /**
      * Create the pipe
      */
-    public function buildPipe()
+    public function sendInit()
     {
-        $pipe = new GnuPlotPipe;
-        $pipe->sendCommand('set grid');
+        $this->sendCommand('set grid');
 
         if ($this->xlabel) {
-            $pipe->sendCommand('set xlabel "'.$this->xlabel.'"');
+            $this->sendCommand('set xlabel "'.$this->xlabel.'"');
         }
         
         if ($this->ylabel) {
-            $pipe->sendCommand('set ylabel "'.$this->ylabel.'"');
+            $this->sendCommand('set ylabel "'.$this->ylabel.'"');
         }
 
         foreach ($this->labels as $label) {
-            $pipe->sendCommand('set label "'.$label[2].'" at '.$label[0].', '.$label[1]);
+            $this->sendCommand('set label "'.$label[2].'" at '.$label[0].', '.$label[1]);
         }
-
-        return $pipe;
     }
 
     /**
      * Runs the plot to the given pipe
      */
-    public function plot(GnuPlotPipe $pipe, $replot = false)
+    public function plot($replot = false)
     {
         if ($replot) {
-            $pipe->sendCommand('replot');
+            $this->sendCommand('replot');
         } else {
-            $pipe->sendCommand('plot "-"'.$this->getUsings());
+            $this->sendCommand('plot '.$this->getUsings());
         }
-        $this->sendData($pipe);
+        $this->plotted = true;
+        $this->sendData();
     }
 
     /**
@@ -137,10 +141,10 @@ class GnuPlot
      */
     public function writePng($file)
     {
-        $pipe = $this->buildPipe();
-        $pipe->sendCommand('set terminal png size '.$this->width.','.$this->height);
-        $pipe->sendCommand('set output "'.$file.'"');
-        $this->plot($pipe);
+        $this->sendInit();
+        $this->sendCommand('set terminal png size '.$this->width.','.$this->height);
+        $this->sendCommand('set output "'.$file.'"');
+        $this->plot();
     }
 
     /**
@@ -148,9 +152,8 @@ class GnuPlot
      */
     public function display()
     {
-        $pipe = $this->buildPipe();
-        $this->plot($pipe);
-        $this->pipe = $pipe;
+        $this->sendInit();
+        $this->plot();
     }
 
     /**
@@ -158,8 +161,8 @@ class GnuPlot
      */
     public function refresh()
     {
-        if ($this->pipe) {
-            $this->plot($this->pipe, true);
+        if ($this->plotted) {
+            $this->plot(true);
         } else {
             $this->display();
         }
@@ -200,31 +203,61 @@ class GnuPlot
      */
     public function getUsings()
     {
-        $usings = '';
+        $usings = array();
 
-        for ($i=0; $i<$this->dimension; $i++) {
-            $usings .= ' using 1:'.(2+$i).' with line';
+        for ($i=0; $i<count($this->values); $i++) {
+            $using = '"-" using 1:2 with line';
             if (isset($this->titles[$i])) {
-                $usings .= ' title "'.$this->titles[$i].'"';
+                $using .= ' title "'.$this->titles[$i].'"';
             }
+            $usings[] = $using;
         }
 
-        return $usings;
+        return implode(', ', $usings);
     }
 
     /**
      * Sends all the command to the given pipe to give it the
      * current data
      */
-    public function sendData(GnuPlotPipe $pipe)
+    public function sendData()
     {
-        foreach ($this->values as $x => $ys) {
-            $data = array($x);
-            foreach ($ys as $y) {
-                $data[] = $y;
-            }    
-            $pipe->sendCommand(implode(' ', $data));
+        foreach ($this->values as $index => $data) {
+            foreach ($data as $xy) {
+                list($x, $y) = $xy;
+                $this->sendCommand($x.' '.$y);
+            }
+            $this->sendCommand('e');
         }
-        $pipe->sendCommand('e');
+    }
+
+    /**
+     * Sends a command to the gnuplot process
+     */
+    public function sendCommand($command)
+    {
+        $command .= "\n";
+        fwrite($this->stdin, $command);
+    }
+
+    /**
+     * Open the pipe
+     */
+    protected function openPipe()
+    {
+        $descriptorspec = array(
+            0 => array('pipe', 'r'),
+            1 => array('pipe', 'w'),
+            2 => array('pipe', 'r')
+        );
+
+        $this->process = proc_open('gnuplot', $descriptorspec, $pipes);
+
+        if (!is_resource($this->process)) {
+            throw new \Exception('Unable to run GnuPlot');
+        }
+
+        $this->stdin = $pipes[0];
+        $this->stdout = $pipes[1];
     }
 }
