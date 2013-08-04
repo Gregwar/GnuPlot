@@ -3,10 +3,20 @@ GnuPlot
 
 A PHP Library for using GnuPlot
 
-For usage demo, see `demo/` directory
+This is the output of the `demo/write.php`:
+
+![gnuplot](http://gregwar.com/gnuplot.png)
+
+Requirements
+============
+
+You need to have a server with `gnuplot` installed and the safe mode
+disabled (to be able to run `proc_open()`)
 
 Usage
 =====
+
+There is examples in the `demo/` directory.
 
 You can create a graph and populate it like this:
 
