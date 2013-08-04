@@ -31,6 +31,9 @@ class GnuPlot
     // Y range scale
     protected $yrange;
 
+    // Graph title
+    protected $title;
+
     // Gnuplot process
     protected $process;
     protected $stdin;
@@ -59,6 +62,7 @@ class GnuPlot
         $this->labels = array();
         $this->titles = array();
         $this->yrange = null;
+        $this->title = null;
     }
 
     /**
@@ -117,11 +121,25 @@ class GnuPlot
     }
 
     /**
+     * Sets the graph title
+     */
+    public function setGraphTitle($title)
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    /**
      * Create the pipe
      */
     public function sendInit()
     {
         $this->sendCommand('set grid');
+
+        if ($this->title) {
+            $this->sendCommand('set title "'.$this->title.'"');
+        }
 
         if ($this->xlabel) {
             $this->sendCommand('set xlabel "'.$this->xlabel.'"');

@@ -7,6 +7,9 @@ use Gregwar\GnuPlot\GnuPlot;
 $plot = new GnuPlot;
 
 $plot
+    ->setGraphTitle('Demo graph')
+    ->setXLabel('Something')
+    ->setYLabel('Another something')
     ->setWidth(500)
     ->setHeight(300)
     ->push(0, 1)
