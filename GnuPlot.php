@@ -133,7 +133,7 @@ class GnuPlot
     /**
      * Create the pipe
      */
-    public function sendInit()
+    protected function sendInit()
     {
         $this->sendCommand('set grid');
 
@@ -261,7 +261,7 @@ class GnuPlot
     /**
      * Gets the "using" line
      */
-    public function getUsings()
+    protected function getUsings()
     {
         $usings = array();
 
@@ -280,7 +280,7 @@ class GnuPlot
      * Sends all the command to the given pipe to give it the
      * current data
      */
-    public function sendData()
+    protected function sendData()
     {
         foreach ($this->values as $index => $data) {
             foreach ($data as $xy) {
@@ -294,7 +294,7 @@ class GnuPlot
     /**
      * Sends a command to the gnuplot process
      */
-    public function sendCommand($command)
+    protected function sendCommand($command)
     {
         $command .= "\n";
         fwrite($this->stdin, $command);

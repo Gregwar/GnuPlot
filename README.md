@@ -85,6 +85,26 @@ run `realTime.php` for example:
 $plot->refresh();
 ```
 
+API
+===
+
+* `push($x, $y, $index=0)`, add a point to the $index-nth curve
+* `display()`, renders the graph on the screen (asuming you are using
+  it as a CLI with an X Server
+* `refresh()`, same as `display()`, but will replot the graph after
+  the first call
+* `get()`, gets the PNG data for your image
+* `writePng($filename)`, write the data to the output file
+* `setTitle($index, $title)`, sets the title of the $index-nt curve
+* `setGraphTitle($title)`, sets the main title for the graph
+* `setXLabel($text)`, sets the label for the X axis
+* `setYLabel($text)`, sets the label for the Y axis
+* `setXRange($min, $max)`, set the X min & max 
+* `setYRange($min, $max)`, set the Y min & max 
+* `setWidth($width)`, sets the width of the graph
+* `setHeight($height)`, sets the width of the graph
+* `addLabel($x, $y, $text)`, add some label at a point
+
 License
 =======
 
