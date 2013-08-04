@@ -184,6 +184,30 @@ class GnuPlot
     }
 
     /**
+     * Write the current plot to a file
+     */
+    public function get()
+    {
+        $this->sendInit();
+        $this->sendCommand('set terminal png size '.$this->width.','.$this->height);
+        fflush($this->stdout);
+        $this->plot();
+
+        // Reading data, timeout=100ms
+        $result = '';
+        $timeout = 100;
+        do {
+            stream_set_blocking($this->stdout, false);
+            $data = fread($this->stdout, 128);
+            $result .= $data;
+            usleep(5000);
+            $timeout-=5;
+        } while ($timeout>0 || $data);
+
+        return $result;
+    }
+
+    /**
      * Display the plot
      */
     public function display()

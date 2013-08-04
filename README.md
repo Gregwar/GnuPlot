@@ -38,11 +38,41 @@ $plot
     ;
 ```
 
-You can then save it to a file:
+You can then save it to a file, have a look to `write.php` for example:
 
 ```php
+<?php
+
 // Write the graph to out.png
 $plot->writePng('out.png');
+```
+
+Or render it directly into a browser, you can try `out.php` for
+example:
+
+```php
+<?php
+
+header('Content-type: image/png');
+echo $plot->get();
+```
+
+Or display it on the screen (useful with CLI scripts), run the 
+`demo.php` script for example:
+
+```php
+<?php
+
+$plot->display();
+```
+
+Or display it, and re-feed it in real time (with CLI scripts), you can
+run `realTime.php` for example:
+
+```php
+<?php
+
+$plot->refresh();
 ```
 
 License
