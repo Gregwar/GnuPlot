@@ -1,0 +1,23 @@
+{
+    "name": "gregwar/gnuplot",
+    "description": "GnuPlot library",
+    "keywords": ["gnuplot", "graph", "plot", "stats", "image", "png"],
+    "homepage": "https://github.com/Gregwar/GnuPlot",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Grégoire Passault",
+            "email": "g.passault@gmail.com",
+            "homepage": "http://www.gregwar.com/"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0"
+    },
+    "target-dir": "Gregwar/GnuPlot",
+    "autoload": {
+        "psr-0": {
+            "Gregwar\\GnuPlot": ""
+        }
+    }
+}
