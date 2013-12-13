@@ -10,6 +10,9 @@ class GnuPlot
     // Time format if X data is time
     protected $timeFormat = null;
 
+    // Display mode
+    protected $mode = 'line';
+
     // Plot width
     protected $width = 1200;
 
@@ -279,6 +282,16 @@ class GnuPlot
     }
 
     /**
+     * Histogram mode
+     */
+    public function enableHistogram()
+    {
+        $this->mode = 'impulses linewidth 10';
+
+        return $this;
+    }
+
+    /**
      * Gets the "using" line
      */
     protected function getUsings()
@@ -286,7 +299,7 @@ class GnuPlot
         $usings = array();
 
         for ($i=0; $i<count($this->values); $i++) {
-            $using = '"-" using 1:2 with line';
+            $using = '"-" using 1:2 with '.$this->mode;
             if (isset($this->titles[$i])) {
                 $using .= ' title "'.$this->titles[$i].'"';
             }
