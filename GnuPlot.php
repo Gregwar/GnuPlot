@@ -7,6 +7,9 @@ class GnuPlot
     // Values as an array
     protected $values = array();
 
+    // Time format if X data is time
+    protected $timeFormat = null;
+
     // Plot width
     protected $width = 1200;
 
@@ -144,6 +147,13 @@ class GnuPlot
         if ($this->xlabel) {
             $this->sendCommand('set xlabel "'.$this->xlabel.'"');
         }
+
+        if ($this->timeFormat) {
+            $this->sendCommand('set xdata time');
+            $this->sendCommand('set timefmt "'.$this->timeFormat.'"');
+            $this->sendCommand('set format x "'.$this->timeFormat.'"');
+            $this->sendCommand('set xtics rotate by 45 offset -6,-3');
+        }
         
         if ($this->ylabel) {
             $this->sendCommand('set ylabel "'.$this->ylabel.'"');
@@ -234,6 +244,16 @@ class GnuPlot
     public function setXLabel($xlabel)
     {
         $this->xlabel = $xlabel;
+
+        return $this;
+    }
+
+    /**
+     * Sets the X timeformat
+     */
+    public function setXTimeFormat($timeFormat)
+    {
+        $this->timeFormat = $timeFormat;
 
         return $this;
     }
