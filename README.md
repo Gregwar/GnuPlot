@@ -5,7 +5,7 @@ A PHP Library for using GnuPlot
 
 This is the output of the `demo/write.php`:
 
-![gnuplot](http://gregwar.com/gnuplot.png)
+![gnuplot](demo/out.png)
 
 Requirements
 ============
