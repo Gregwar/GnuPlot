@@ -34,6 +34,9 @@ class GnuPlot
     // Titles
     protected $titles;
 
+    // X range scale
+    protected $xrange;
+
     // Y range scale
     protected $yrange;
 
@@ -50,7 +53,7 @@ class GnuPlot
         $this->reset();
         $this->openPipe();
     }
-    
+
     public function __destruct()
     {
         $this->sendCommand('quit');
@@ -67,8 +70,19 @@ class GnuPlot
         $this->ylabel = null;
         $this->labels = array();
         $this->titles = array();
+        $this->xrange = null;
         $this->yrange = null;
         $this->title = null;
+    }
+
+    /**
+     * Sets the X Range for values
+     */
+    public function setXRange($min, $max)
+    {
+        $this->xrange = array($min, $max);
+
+        return $this;
     }
 
     /**
@@ -157,9 +171,13 @@ class GnuPlot
             $this->sendCommand('set format x "'.$this->timeFormat.'"');
             $this->sendCommand('set xtics rotate by 45 offset -6,-3');
         }
-        
+
         if ($this->ylabel) {
             $this->sendCommand('set ylabel "'.$this->ylabel.'"');
+        }
+
+        if ($this->xrange) {
+            $this->sendCommand('set xrange ['.$this->xrange[0].':'.$this->xrange[1].']');
         }
 
         if ($this->yrange) {
