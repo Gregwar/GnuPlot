@@ -85,6 +85,24 @@ run `realTime.php` for example:
 $plot->refresh();
 ```
 
+PIE CHART USAGE
+===
+```php
+<?php
+    $plot = new GnuPlot;
+
+    $plot->setHeight(400);
+    $plot->setWidth(400);
+
+    $plot->pushPie(50)->setPieLabel('1950');
+    $plot->pushPie(100)->setPieLabel('2000');
+    $plot->pushPie(150)->setPieLabel('2050');
+
+    header('Content-type: image/png');
+    echo $plot->getPieChart();
+```
+
+
 API
 ===
 
@@ -104,6 +122,8 @@ API
 * `setWidth($width)`, sets the width of the graph
 * `setHeight($height)`, sets the width of the graph
 * `addLabel($x, $y, $text)`, add some label at a point
+
+
 
 License
 =======
