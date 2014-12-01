@@ -371,4 +371,6 @@ class GnuPlot
         $this->stdin = $pipes[0];
         $this->stdout = $pipes[1];
     }
+    
+    
 }
