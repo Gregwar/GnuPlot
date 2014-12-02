@@ -85,6 +85,33 @@ run `realTime.php` for example:
 $plot->refresh();
 ```
 
+GnuPlot BarChart USAGE
+=======
+
+```php
+require_once './GnuPlotBarChart.php';
+
+$plot = new GnuPlotBarChart;
+$plot->setWidth(500);
+$plot->setHeight(500);
+$plot->setGraphTitle("Exmple bar chart");
+
+$g1 = $plot->pushGroup('Income');
+$plot->push($g1, 2);
+$plot->push($g1, 1);
+
+$g2 = $plot->pushGroup('Sale');
+$plot->push($g2, 7);
+$plot->push($g2, 4);
+
+
+$plot->pushLabel("2013");
+$plot->pushLabel("2014");
+
+header('Content-type: image/png');
+echo $plot->get();
+```
+
 API
 ===
 
@@ -109,4 +136,4 @@ License
 =======
 
 `Gregwar\GnuPlot` is under MIT license
-
+`GnuPlotBarChart` is under MIT license
