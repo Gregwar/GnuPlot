@@ -43,6 +43,8 @@ class GnuPlot
     // Y range scale
     protected $yrange;
 
+    protected $yformat = null;
+
     // Graph title
     protected $title;
 
@@ -180,6 +182,10 @@ class GnuPlot
             $this->sendCommand('set ylabel "'.$this->ylabel.'"');
         }
 
+        if ($this->yformat) {
+            $this->sendCommand('set format y "'.$this->yformat.'"');
+        }
+
         if ($this->xrange) {
             $this->sendCommand('set xrange ['.$this->xrange[0].':'.$this->xrange[1].']');
         }
@@ -261,6 +267,13 @@ class GnuPlot
         } else {
             $this->display();
         }
+    }
+
+    public function setYFormat($yformat)
+    {
+        $this->yformat = $yformat;
+
+        return $this;
     }
 
     /**

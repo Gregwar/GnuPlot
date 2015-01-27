@@ -97,9 +97,11 @@ API
 * `writePng($filename)`, write the data to the output file
 * `setTitle($index, $title)`, sets the title of the $index-nt curve
 * `setGraphTitle($title)`, sets the main title for the graph
-* `setXTimeFormat($fmtString)` sets the X axis as a time axis and specify format
+* `setXTimeFormat($format)`, sets the X axis as a time axis and specify data format
+* `setXTimeFormatString($format)`, specify the X axis time presentation format
 * `setXLabel($text)`, sets the label for the X axis
 * `setYLabel($text)`, sets the label for the Y axis
+* `setYFormat($format)`, sets Y axis formatting
 * `setXRange($min, $max)`, set the X min & max
 * `setYRange($min, $max)`, set the Y min & max
 * `setWidth($width)`, sets the width of the graph
