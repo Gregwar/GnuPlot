@@ -169,7 +169,6 @@ class GnuPlot
             $this->sendCommand('set xdata time');
             $this->sendCommand('set timefmt "'.$this->timeFormat.'"');
             $this->sendCommand('set format x "'.$this->timeFormat.'"');
-            $this->sendCommand('set xtics rotate by 45 offset -6,-3');
         }
 
         if ($this->ylabel) {
@@ -270,7 +269,7 @@ class GnuPlot
     }
 
     /**
-     * Sets the X timeformat
+     * Sets the X timeformat, example "%Y-%m-%d"
      */
     public function setXTimeFormat($timeFormat)
     {
