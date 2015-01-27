@@ -283,7 +283,7 @@ class GnuPlot
         return $this;
     }
 
-    public function timeFormatString($timeFormatString)
+    public function setTimeFormatString($timeFormatString)
     {
         $this->timeFormatString = $timeFormatString;
 
