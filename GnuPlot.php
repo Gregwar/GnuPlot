@@ -10,6 +10,9 @@ class GnuPlot
     // Time format if X data is time
     protected $timeFormat = null;
 
+    // Time presentation format for X, if $timeFormat is set
+    protected $timeFormatString = null;
+
     // Display mode
     protected $mode = 'line';
 
@@ -39,6 +42,8 @@ class GnuPlot
 
     // Y range scale
     protected $yrange;
+
+    protected $yformat = null;
 
     // Graph title
     protected $title;
@@ -168,12 +173,18 @@ class GnuPlot
         if ($this->timeFormat) {
             $this->sendCommand('set xdata time');
             $this->sendCommand('set timefmt "'.$this->timeFormat.'"');
-            $this->sendCommand('set format x "'.$this->timeFormat.'"');
             $this->sendCommand('set xtics rotate by 45 offset -6,-3');
+            if ($this->timeFormatString) {
+                $this->sendCommand('set format x "'.$this->timeFormatString.'"');
+            }
         }
 
         if ($this->ylabel) {
             $this->sendCommand('set ylabel "'.$this->ylabel.'"');
+        }
+
+        if ($this->yformat) {
+            $this->sendCommand('set format y "'.$this->yformat.'"');
         }
 
         if ($this->xrange) {
@@ -259,6 +270,13 @@ class GnuPlot
         }
     }
 
+    public function setYFormat($yformat)
+    {
+        $this->yformat = $yformat;
+
+        return $this;
+    }
+
     /**
      * Sets the label for X axis
      */
@@ -270,11 +288,18 @@ class GnuPlot
     }
 
     /**
-     * Sets the X timeformat
+     * Sets the X timeformat, example "%Y-%m-%d"
      */
     public function setXTimeFormat($timeFormat)
     {
         $this->timeFormat = $timeFormat;
+
+        return $this;
+    }
+
+    public function setTimeFormatString($timeFormatString)
+    {
+        $this->timeFormatString = $timeFormatString;
 
         return $this;
     }
