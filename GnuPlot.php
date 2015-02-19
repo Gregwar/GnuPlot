@@ -1,9 +1,16 @@
-<?php
+<?php namespace Gregwar\GnuPlot;
 
-namespace Gregwar\GnuPlot;
-
-class GnuPlot
-{
+class GnuPlot {
+	// Available units
+	const UNIT_BLANK	= '';
+	const UNIT_INCH 	= 'in';
+	const UNIT_CM		= 'cm';
+	
+	// Available terminals
+	const TERMINAL_PNG	= 'png';
+	const TERMINAL_PDF	= 'pdf';
+	const TERMINAL_EPS	= 'eps';
+	
     // Values as an array
     protected $values = array();
 
@@ -21,6 +28,9 @@ class GnuPlot
 
     // Plot height
     protected $height = 800;
+	
+	// Size unit.
+	protected $unit = self::UNIT_BLANK;
 
     // Was it already plotted?
     protected $plotted = false;
@@ -144,6 +154,16 @@ class GnuPlot
 
         return $this;
     }
+	
+	/**
+     * Sets the graph size unit. You can use one of the UNIT_ constants defined in this class.
+     */
+	public function setUnit($unit)
+	{
+		$this->unit = $unit;
+
+		return $this;
+	}
 
     /**
      * Sets the graph title
@@ -213,25 +233,49 @@ class GnuPlot
         $this->plotted = true;
         $this->sendData();
     }
+	
+	/**
+     * Write the current plot to a file
+     */
+	public function write($terminal, $file)
+	{
+		$this->sendInit();
+		$this->sendCommand("set terminal $terminal size {$this->width}{$this->unit}, {$this->height}{$this->unit}");
+		$this->sendCommand('set output "'.$file.'"');
+		$this->plot();
+	}
 
     /**
-     * Write the current plot to a file
+     * Write the current plot to a PNG file
      */
     public function writePng($file)
     {
-        $this->sendInit();
-        $this->sendCommand('set terminal png size '.$this->width.','.$this->height);
-        $this->sendCommand('set output "'.$file.'"');
-        $this->plot();
+        $this->write(self::TERMINAL_PNG, $file);
     }
+	
+	/**
+     * Write the current plot to a PDF file
+     */
+	public function writePDF($file)
+	{
+		$this->write(self::TERMINAL_PDF, $file);
+	}
+	
+	/**
+     * Write the current plot to an EPS file
+     */
+	public function writeEPS($file)
+	{
+		$this->write(self::TERMINAL_EPS, $file);
+	}
 
     /**
      * Write the current plot to a file
      */
-    public function get()
+    public function get($format = self::TERMINAL_PNG)
     {
         $this->sendInit();
-        $this->sendCommand('set terminal png size '.$this->width.','.$this->height);
+		$this->sendCommand("set terminal $format size {$this->width}{$this->unit}, {$this->width}{$this->unit}");
         fflush($this->stdout);
         $this->plot();
 
