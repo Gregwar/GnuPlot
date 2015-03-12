@@ -1,16 +1,16 @@
 <?php namespace Gregwar\GnuPlot;
 
 class GnuPlot {
-	// Available units
-	const UNIT_BLANK	= '';
-	const UNIT_INCH 	= 'in';
-	const UNIT_CM		= 'cm';
-	
-	// Available terminals
-	const TERMINAL_PNG	= 'png';
-	const TERMINAL_PDF	= 'pdf';
-	const TERMINAL_EPS	= 'eps';
-	
+    // Available units
+    const UNIT_BLANK    = '';
+    const UNIT_INCH     = 'in';
+    const UNIT_CM       = 'cm';
+    
+    // Available terminals
+    const TERMINAL_PNG  = 'png';
+    const TERMINAL_PDF  = 'pdf';
+    const TERMINAL_EPS  = 'eps';
+    
     // Values as an array
     protected $values = array();
 
@@ -28,9 +28,9 @@ class GnuPlot {
 
     // Plot height
     protected $height = 800;
-	
-	// Size unit.
-	protected $unit = self::UNIT_BLANK;
+    
+    // Size unit.
+    protected $unit = self::UNIT_BLANK;
 
     // Was it already plotted?
     protected $plotted = false;
@@ -46,6 +46,12 @@ class GnuPlot {
 
     // Titles
     protected $titles;
+    
+    // Line Widths
+    protected $lineWidth;
+    
+    // Line Points
+    protected $linePoints;
 
     // X range scale
     protected $xrange;
@@ -63,16 +69,27 @@ class GnuPlot {
     protected $stdin;
     protected $stdout;
 
-    public function __construct()
-    {
+    public function __construct() {
+        $this->initialize();
+    }
+
+    public function __destruct() {
+       $this->cleanup();
+    }
+    
+    protected function initialize() {
         $this->reset();
         $this->openPipe();
     }
-
-    public function __destruct()
-    {
+    
+    protected function cleanup() {
         $this->sendCommand('quit');
         proc_close($this->process);
+    }
+
+    public function flush() {
+        $this->cleanup();
+        $this->initialize();
     }
 
     /**
@@ -85,6 +102,8 @@ class GnuPlot {
         $this->ylabel = null;
         $this->labels = array();
         $this->titles = array();
+        $this->lineWidths = array();
+        $this->linePoints = array();
         $this->xrange = null;
         $this->yrange = null;
         $this->title = null;
@@ -134,6 +153,26 @@ class GnuPlot {
 
         return $this;
     }
+    
+    /**
+     * Sets the line width of the $index th curve in the plot
+     */
+    public function setLineWidth($index, $width)
+    {
+        $this->lineWidths[$index] = $width;
+
+        return $this;
+    }
+    
+    /**
+     * Sets the line point of the $index th curve in the plot
+     */
+    public function setLinePoint($index, $point)
+    {
+        $this->linePoints[$index] = $point;
+
+        return $this;
+    }
 
     /**
      * Sets the graph width
@@ -154,16 +193,16 @@ class GnuPlot {
 
         return $this;
     }
-	
-	/**
+    
+    /**
      * Sets the graph size unit. You can use one of the UNIT_ constants defined in this class.
      */
-	public function setUnit($unit)
-	{
-		$this->unit = $unit;
+    public function setUnit($unit)
+    {
+        $this->unit = $unit;
 
-		return $this;
-	}
+        return $this;
+    }
 
     /**
      * Sets the graph title
@@ -233,17 +272,21 @@ class GnuPlot {
         $this->plotted = true;
         $this->sendData();
     }
-	
-	/**
+    
+    /**
      * Write the current plot to a file
      */
-	public function write($terminal, $file)
-	{
-		$this->sendInit();
-		$this->sendCommand("set terminal $terminal size {$this->width}{$this->unit}, {$this->height}{$this->unit}");
-		$this->sendCommand('set output "'.$file.'"');
-		$this->plot();
-	}
+    public function write($terminal, $file)
+    {
+        $this->sendInit();
+        $this->sendCommand("set terminal $terminal size {$this->width}{$this->unit}, {$this->height}{$this->unit}");
+        $this->sendCommand('set output "'.$file.'"');
+        $this->plot();
+        
+        // Flush the output as described here: http://www.gnuplot.info/faq/faq.html#x1-840007.6
+        $this->sendCommand('set output');
+        usleep(5000);
+    }
 
     /**
      * Write the current plot to a PNG file
@@ -252,22 +295,22 @@ class GnuPlot {
     {
         $this->write(self::TERMINAL_PNG, $file);
     }
-	
-	/**
+    
+    /**
      * Write the current plot to a PDF file
      */
-	public function writePDF($file)
-	{
-		$this->write(self::TERMINAL_PDF, $file);
-	}
-	
-	/**
+    public function writePDF($file)
+    {
+        $this->write(self::TERMINAL_PDF, $file);
+    }
+    
+    /**
      * Write the current plot to an EPS file
      */
-	public function writeEPS($file)
-	{
-		$this->write(self::TERMINAL_EPS, $file);
-	}
+    public function writeEPS($file)
+    {
+        $this->write(self::TERMINAL_EPS, $file);
+    }
 
     /**
      * Write the current plot to a file
@@ -275,7 +318,7 @@ class GnuPlot {
     public function get($format = self::TERMINAL_PNG)
     {
         $this->sendInit();
-		$this->sendCommand("set terminal $format size {$this->width}{$this->unit}, {$this->width}{$this->unit}");
+        $this->sendCommand("set terminal $format size {$this->width}{$this->unit}, {$this->width}{$this->unit}");
         fflush($this->stdout);
         $this->plot();
 
@@ -389,10 +432,16 @@ class GnuPlot {
             $using = '"-" using 1:2 with '.$this->mode;
             if (isset($this->titles[$i])) {
                 $using .= ' title "'.$this->titles[$i].'"';
+                
+                if (isset($this->lineWidths[$i]))
+                    $using .= ' lw ' . $this->lineWidths[$i];
+                
+                if (isset($this->linePoints[$i]))
+                    $using .= ' lp ' . $this->linePoints[$i];
             }
             $usings[] = $using;
         }
-
+        
         return implode(', ', $usings);
     }
 
