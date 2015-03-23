@@ -49,6 +49,9 @@ class GnuPlot {
     
     // Line Widths
     protected $lineWidth;
+
+    // Line Modes
+    protected $lineModes;
     
     // Line Points
     protected $linePoints;
