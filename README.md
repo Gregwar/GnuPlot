@@ -94,8 +94,13 @@ API
 * `refresh()`, same as `display()`, but will replot the graph after
   the first call
 * `get()`, gets the PNG data for your image
-* `writePng($filename)`, write the data to the output file
+* `writePng($filename)`, writes the data to the output PNG file
+* `writePDF($filename)`, writes the data to the output PDF file
+* `writeEPS($filename)`, writes the data to the output EPS file
 * `setTitle($index, $title)`, sets the title of the $index-nt curve
+* `setLineWidth($index, $title)`, sets the width of the $index-nt curve
+* `setLineMode($index, $title)`, sets the line mode of the $index-nt curve
+* `setLinePoint($index, $title)`, sets the line point of the $index-nt curve
 * `setGraphTitle($title)`, sets the main title for the graph
 * `setXTimeFormat($format)`, sets the X axis as a time axis and specify data format
 * `setXTimeFormatString($format)`, specify the X axis time presentation format
