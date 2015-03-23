@@ -104,6 +104,7 @@ class GnuPlot {
         $this->titles = array();
         $this->lineWidths = array();
         $this->linePoints = array();
+		$this->lineModes = array();
         $this->xrange = null;
         $this->yrange = null;
         $this->title = null;
@@ -173,6 +174,15 @@ class GnuPlot {
 
         return $this;
     }
+	
+	/**
+     * Sets the line mode of the $index th curve in the plot
+     */
+	public function setLineMode($index, $mode) {
+		$this->lineModes[$index] = $mode;
+		
+		return $this;
+	}
 
     /**
      * Sets the graph width
@@ -429,7 +439,7 @@ class GnuPlot {
         $usings = array();
 
         for ($i=0; $i<count($this->values); $i++) {
-            $using = '"-" using 1:2 with '.$this->mode;
+            $using = '"-" using 1:2 with '. (isset($this->lineModes[$i]) ? $this->lineModes[$i] : $this->mode);
             if (isset($this->titles[$i])) {
                 $using .= ' title "'.$this->titles[$i].'"';
                 
@@ -437,7 +447,7 @@ class GnuPlot {
                     $using .= ' lw ' . $this->lineWidths[$i];
                 
                 if (isset($this->linePoints[$i]))
-                    $using .= ' lp ' . $this->linePoints[$i];
+                    $using .= ' pt ' . $this->linePoints[$i];
             }
             $usings[] = $using;
         }
