@@ -10,6 +10,9 @@ class GnuPlot {
     const TERMINAL_PNG  = 'png';
     const TERMINAL_PDF  = 'pdf';
     const TERMINAL_EPS  = 'eps';
+
+    const SMOOTH_SPLINE = 'cspline';
+    const SMOOTH_BEZIER = 'bezier';
     
     // Values as an array
     protected $values = array();
@@ -28,6 +31,9 @@ class GnuPlot {
 
     // Plot height
     protected $height = 800;
+
+    // Default sleep time
+    protected $sleepTime = 5000;
     
     // Size unit.
     protected $unit = self::UNIT_BLANK;
@@ -55,6 +61,9 @@ class GnuPlot {
     
     // Line Points
     protected $linePoints;
+
+    // Smooth Mode
+    protected $lineSmooths;
 
     // X range scale
     protected $xrange;
@@ -107,7 +116,8 @@ class GnuPlot {
         $this->titles = array();
         $this->lineWidths = array();
         $this->linePoints = array();
-		$this->lineModes = array();
+        $this->lineModes = array();
+        $this->lineSmooths = array();
         $this->xrange = null;
         $this->yrange = null;
         $this->title = null;
@@ -177,15 +187,21 @@ class GnuPlot {
 
         return $this;
     }
-	
-	/**
+    
+    /**
      * Sets the line mode of the $index th curve in the plot
      */
-	public function setLineMode($index, $mode) {
-		$this->lineModes[$index] = $mode;
-		
-		return $this;
-	}
+    public function setLineMode($index, $mode) {
+        $this->lineModes[$index] = $mode;
+        
+        return $this;
+    }
+
+    public function setLineSmooth($index, $smooth) {
+        $this->lineSmooths[$index] = $smooth;
+
+        return $this;
+    }
 
     /**
      * Sets the graph width
@@ -203,6 +219,16 @@ class GnuPlot {
     public function setHeight($height)
     {
         $this->height = $height;
+
+        return $this;
+    }
+
+    /**
+     * Sets the sleep time
+     */
+    public function setSleepTime($sleepTime)
+    {
+        $this->sleepTime = $sleepTime;
 
         return $this;
     }
@@ -298,7 +324,7 @@ class GnuPlot {
         
         // Flush the output as described here: http://www.gnuplot.info/faq/faq.html#x1-840007.6
         $this->sendCommand('set output');
-        usleep(5000);
+        usleep($this->sleepTime);
     }
 
     /**
@@ -342,7 +368,7 @@ class GnuPlot {
             stream_set_blocking($this->stdout, false);
             $data = fread($this->stdout, 128);
             $result .= $data;
-            usleep(5000);
+            usleep($this->sleepTime);
             $timeout-=5;
         } while ($timeout>0 || $data);
 
@@ -451,6 +477,9 @@ class GnuPlot {
                 
                 if (isset($this->linePoints[$i]))
                     $using .= ' pt ' . $this->linePoints[$i];
+
+                if (isset($this->lineSmooths[$i]))
+                    $using .= ' smooth ' . $this->lineSmooths[$i];
             }
             $usings[] = $using;
         }
