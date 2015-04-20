@@ -111,7 +111,9 @@ API
 * `setYRange($min, $max)`, set the Y min & max
 * `setWidth($width)`, sets the width of the graph
 * `setHeight($height)`, sets the width of the graph
+* `setSleepTime($sleepTime)`, sets the sleep time after saving a file
 * `addLabel($x, $y, $text)`, add some label at a point
+* `flush()`, completely flushes the internal state and resets the object to its initial state
 
 License
 =======
