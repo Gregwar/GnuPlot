@@ -11,6 +11,7 @@ class GnuPlot {
     const TERMINAL_PDF  = 'pdf';
     const TERMINAL_EPS  = 'eps';
 
+    const SMOOTH_NONE   = null;
     const SMOOTH_SPLINE = 'cspline';
     const SMOOTH_BEZIER = 'bezier';
     
@@ -61,6 +62,9 @@ class GnuPlot {
     
     // Line Points
     protected $linePoints;
+
+    // Line Types
+    protected $lineTypes;
 
     // Smooth Mode
     protected $lineSmooths;
@@ -117,6 +121,7 @@ class GnuPlot {
         $this->lineWidths = array();
         $this->linePoints = array();
         $this->lineModes = array();
+        $this->lineTypes = array();
         $this->lineSmooths = array();
         $this->xrange = null;
         $this->yrange = null;
@@ -197,6 +202,18 @@ class GnuPlot {
         return $this;
     }
 
+    /**
+     * Sets the line type of the $index th curve in the plot
+     */
+    public function setLineType($index, $type) {
+        $this->lineTypes[$index] = $type;
+        
+        return $this;
+    }
+
+    /**
+     * Sets the line smooth of the $index th curve in the plot
+     */
     public function setLineSmooth($index, $smooth) {
         $this->lineSmooths[$index] = $smooth;
 
@@ -471,16 +488,24 @@ class GnuPlot {
             $using = '"-" using 1:2 with '. (isset($this->lineModes[$i]) ? $this->lineModes[$i] : $this->mode);
             if (isset($this->titles[$i])) {
                 $using .= ' title "'.$this->titles[$i].'"';
-                
-                if (isset($this->lineWidths[$i]))
-                    $using .= ' lw ' . $this->lineWidths[$i];
-                
-                if (isset($this->linePoints[$i]))
-                    $using .= ' pt ' . $this->linePoints[$i];
-
-                if (isset($this->lineSmooths[$i]))
-                    $using .= ' smooth ' . $this->lineSmooths[$i];
             }
+
+            if (isset($this->lineTypes[$i])) {
+                $using .= ' lt ' . $this->lineTypes[$i];
+            }
+
+            if (isset($this->lineWidths[$i])) {
+                $using .= ' lw ' . $this->lineWidths[$i];
+            }
+                
+            if (isset($this->linePoints[$i])) {
+                $using .= ' pt ' . $this->linePoints[$i];
+            }
+
+            if (isset($this->lineSmooths[$i])) {
+                $using .= ' smooth ' . $this->lineSmooths[$i];
+            }
+
             $usings[] = $using;
         }
         
