@@ -14,6 +14,8 @@ class GnuPlot {
     const SMOOTH_NONE   = null;
     const SMOOTH_SPLINE = 'cspline';
     const SMOOTH_BEZIER = 'bezier';
+
+    const PROPERTY_LINES = 'lines';
     
     // Values as an array
     protected $values = array();
@@ -75,6 +77,12 @@ class GnuPlot {
     // Y range scale
     protected $yrange;
 
+    // X tics
+    protected $xtics;
+
+    // Y tics
+    protected $ytics;
+
     protected $yformat = null;
 
     // Graph title
@@ -108,6 +116,12 @@ class GnuPlot {
         $this->initialize();
     }
 
+    public function __get($property) {
+        if ($property === self::PROPERTY_LINES) {
+            return count($this->values);
+        }
+    }
+
     /**
      * Reset all the values
      */
@@ -125,6 +139,8 @@ class GnuPlot {
         $this->lineSmooths = array();
         $this->xrange = null;
         $this->yrange = null;
+        $this->xtics = null;
+        $this->ytics = null;
         $this->title = null;
     }
 
@@ -144,6 +160,26 @@ class GnuPlot {
     public function setYRange($min, $max)
     {
         $this->yrange = array($min, $max);
+
+        return $this;
+    }
+
+    /**
+     * Sets the X tics for values
+     */
+    public function setXTics($tics)
+    {
+        $this->xtics = $tics;
+
+        return $this;
+    }
+
+    /**
+     * Sets the Y tics for values
+     */
+    public function setYTics($tics)
+    {
+        $this->ytics = $tics;
 
         return $this;
     }
@@ -308,6 +344,14 @@ class GnuPlot {
 
         if ($this->yrange) {
             $this->sendCommand('set yrange ['.$this->yrange[0].':'.$this->yrange[1].']');
+        }
+
+        if ($this->xtics) {
+            $this->sendCommand('set xtics ' . $this->xtics);
+        }
+
+        if ($this->ytics) {
+            $this->sendCommand('set ytics ' . $this->ytics);
         }
 
         foreach ($this->labels as $label) {
