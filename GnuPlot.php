@@ -44,6 +44,9 @@ class GnuPlot {
     // Was it already plotted?
     protected $plotted = false;
 
+    // Should draw grid for minor ticks
+    protected $minorGrid = false;
+
     // X Label
     protected $xlabel;
 
@@ -82,6 +85,12 @@ class GnuPlot {
 
     // Y tics
     protected $ytics;
+
+    // X mtics
+    protected $mxtics;
+
+    // Y mtics
+    protected $mytics;
 
     protected $yformat = null;
 
@@ -141,6 +150,9 @@ class GnuPlot {
         $this->yrange = null;
         $this->xtics = null;
         $this->ytics = null;
+        $this->mxtics = null;
+        $this->mytics = null;
+        $this->minorGrid = false;
         $this->title = null;
     }
 
@@ -180,6 +192,36 @@ class GnuPlot {
     public function setYTics($tics)
     {
         $this->ytics = $tics;
+
+        return $this;
+    }
+
+    /**
+     * Sets the X mtics for values
+     */
+    public function setMXTics($tics)
+    {
+        $this->mxtics = $tics;
+
+        return $this;
+    }
+
+    /**
+     * Sets the Y mtics for values
+     */
+    public function setMYTics($tics)
+    {
+        $this->mytics = $tics;
+
+        return $this;
+    }
+
+    /**
+     * Enables or disabled the grid for minor tics
+     */
+    public function setMinorGrid($status)
+    {
+        $this->minorGrid = $status;
 
         return $this;
     }
@@ -311,7 +353,11 @@ class GnuPlot {
      */
     protected function sendInit()
     {
-        $this->sendCommand('set grid');
+        $gridCommand = 'set grid xtics ytics';
+        if ($this->minorGrid === true) {
+            $gridCommand .= ' mxtics mytics';
+        }
+        $this->sendCommand($gridCommand);
 
         if ($this->title) {
             $this->sendCommand('set title "'.$this->title.'"');
@@ -352,6 +398,14 @@ class GnuPlot {
 
         if ($this->ytics) {
             $this->sendCommand('set ytics ' . $this->ytics);
+        }
+
+        if ($this->mxtics) {
+            $this->sendCommand('set mxtics ' . $this->mxtics);
+        }
+
+        if ($this->mytics) {
+            $this->sendCommand('set mytics ' . $this->mytics);
         }
 
         foreach ($this->labels as $label) {
