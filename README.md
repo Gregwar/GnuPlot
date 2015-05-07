@@ -98,9 +98,11 @@ API
 * `writePDF($filename)`, writes the data to the output PDF file
 * `writeEPS($filename)`, writes the data to the output EPS file
 * `setTitle($index, $title)`, sets the title of the $index-nt curve
-* `setLineWidth($index, $title)`, sets the width of the $index-nt curve
-* `setLineMode($index, $title)`, sets the line mode of the $index-nt curve
-* `setLinePoint($index, $title)`, sets the line point of the $index-nt curve
+* `setLineWidth($index, $width)`, sets the width of the $index-nt curve
+* `setLineMode($index, $mode)`, sets the line mode of the $index-nt curve
+* `setLinePoint($index, $point)`, sets the line point of the $index-nt curve
+* `setLineType($index, $type)`, sets the line type of the $index-nt curve (for example to change the line's color)
+* `setLineSmooth($index, $smooth)`, sets the smooth type of the $index-nt curve. Available smooths are `SMOOTH_NONE`, `SMOOTH_BEZIER`, `SMOOTH_CSPLINE`, defined as constants on the `GnuPlot` class.
 * `setGraphTitle($title)`, sets the main title for the graph
 * `setXTimeFormat($format)`, sets the X axis as a time axis and specify data format
 * `setXTimeFormatString($format)`, specify the X axis time presentation format
@@ -109,6 +111,11 @@ API
 * `setYFormat($format)`, sets Y axis formatting
 * `setXRange($min, $max)`, set the X min & max
 * `setYRange($min, $max)`, set the Y min & max
+* `setXTics($tics)`, set the X tics
+* `setYTics($tics)`, set the Y tics
+* `setMXTics($tics)`, set the micro X tics
+* `setMYTics($tics)`, set the micro Y tics
+* `setMinorGrid($status)`, enabled/disables the grid for microtics
 * `setWidth($width)`, sets the width of the graph
 * `setHeight($height)`, sets the width of the graph
 * `setSleepTime($sleepTime)`, sets the sleep time after saving a file
