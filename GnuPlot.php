@@ -15,6 +15,8 @@ class GnuPlot {
     const SMOOTH_SPLINE = 'cspline';
     const SMOOTH_BEZIER = 'bezier';
 
+    const LINEMODE_FILLEDCURVES = 'filledcurves';
+
     const PROPERTY_LINES = 'lines';
     
     // Values as an array
@@ -583,7 +585,12 @@ class GnuPlot {
         $usings = array();
 
         for ($i=0; $i<count($this->values); $i++) {
-            $using = '"-" using 1:2 with '. (isset($this->lineModes[$i]) ? $this->lineModes[$i] : $this->mode);
+            if (isset($this->lineModes[$i]) && $this->lineModes[$i] === self::LINEMODE_FILLEDCURVES) {
+                $using = '"-" using 1:2:3 with filledcurves ';
+            } else {
+                $using = '"-" using 1:2 with ' . (isset($this->lineModes[$i]) ? $this->lineModes[$i] : $this->mode);
+            }
+
             if (isset($this->titles[$i])) {
                 $using .= ' title "'.$this->titles[$i].'"';
             }
@@ -619,7 +626,11 @@ class GnuPlot {
         foreach ($this->values as $index => $data) {
             foreach ($data as $xy) {
                 list($x, $y) = $xy;
-                $this->sendCommand($x.' '.$y);
+                if (is_array($y)) {
+                    $this->sendCommand($x.' '.current($y).' '.next($y));
+                } else {
+                    $this->sendCommand($x.' '.$y);
+                }
             }
             $this->sendCommand('e');
         }
@@ -628,7 +639,7 @@ class GnuPlot {
     /**
      * Sends a command to the gnuplot process
      */
-    protected function sendCommand($command)
+    public function sendCommand($command)
     {
         $command .= "\n";
         fwrite($this->stdin, $command);
