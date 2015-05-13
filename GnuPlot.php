@@ -94,6 +94,9 @@ class GnuPlot {
     // Y mtics
     protected $mytics;
 
+    // Legend position
+    protected $key;
+
     protected $yformat = null;
 
     // Graph title
@@ -156,6 +159,7 @@ class GnuPlot {
         $this->mytics = null;
         $this->minorGrid = false;
         $this->title = null;
+        $this->key = null;
     }
 
     /**
@@ -365,6 +369,10 @@ class GnuPlot {
             $this->sendCommand('set title "'.$this->title.'"');
         }
 
+        if ($this->key) {
+            $this->sendCommand('set key ' . $this->key);
+        }
+
         if ($this->xlabel) {
             $this->sendCommand('set xlabel "'.$this->xlabel.'"');
         }
@@ -556,6 +564,16 @@ class GnuPlot {
 
         return $this;
     }
+
+    /**
+     * Sets the legend position
+     */
+    public function setKey($x, $y)
+    {
+        $this->key = "$x $y";
+
+        return $this;
+    }    
 
     /**
      * Add a label text
