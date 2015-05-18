@@ -118,6 +118,9 @@ API
 * `setMinorGrid($status)`, enabled/disables the grid for microtics
 * `setWidth($width)`, sets the width of the graph
 * `setHeight($height)`, sets the width of the graph
+* `setCanvasWidth($width)`, sets the width of the canvas (if not set, the width value is used)
+* `setCanvasHeight($height)`, sets the width of the canvas (if not set, the height value is used)
+* `setOrigin($x, $y)`, sets the origin of the graph
 * `setSleepTime($sleepTime)`, sets the sleep time after saving a file
 * `addLabel($x, $y, $text)`, add some label at a point
 * `flush()`, completely flushes the internal state and resets the object to its initial state
