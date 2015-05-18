@@ -744,3 +744,4 @@ class GnuPlot {
         $this->stdout = $pipes[1];
     }
 }
+
