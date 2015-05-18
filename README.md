@@ -58,6 +58,7 @@ $plot
     ->push(0, [4, 8], 2)
     ->push(1, [5, 9], 2)
     ->push(2, [6,10], 2)
+    ;
 ```
 
 You can then save it to a file, have a look to `write.php` for example:
