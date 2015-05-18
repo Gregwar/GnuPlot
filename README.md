@@ -38,14 +38,26 @@ $plot
     ->push(2, 6)
     ;
 
-// Adding three points on the other curve
+// Adding three points on the other curve and drawing it as a line of connected points, colored in red and smoothed
 // (with index 1)
 $plot
     ->setTitle(1, 'The first curve')
+    ->setLineType(1, 'rgb #ff0000')
+    ->setLineMode(1, 'lp')
+    ->setLineSmooth(1, GnuPlot::SMOOTH_CSPLINE)
     ->push(0, 8, 1)
     ->push(1, 9, 1)
-    ->push(2, 10, 2)
+    ->push(2, 10, 1)
     ;
+
+// Drawing the area between the two curves in blue
+$plot
+    ->setLineMode(2, GnuPlot::LINEMODE_FILLEDCURVES)
+    ->setLineType(2, 'rgb #0000ff')
+    ->setTitle(2, 'Area')
+    ->push(0, [4, 8], 2)
+    ->push(1, [5, 9], 2)
+    ->push(2, [6,10], 2)
 ```
 
 You can then save it to a file, have a look to `write.php` for example:
@@ -88,7 +100,7 @@ $plot->refresh();
 API
 ===
 
-* `push($x, $y, $index=0)`, add a point to the $index-nth curve
+* `push($x, $y, $index=0)`, add a point to the $index-nth curve ($y can be an array if the linemode is `GnuPlot::LINEMODE_FILLEDCURVES`)
 * `display()`, renders the graph on the screen (asuming you are using
   it as a CLI with an X Server
 * `refresh()`, same as `display()`, but will replot the graph after
@@ -99,7 +111,7 @@ API
 * `writeEPS($filename)`, writes the data to the output EPS file
 * `setTitle($index, $title)`, sets the title of the $index-nt curve
 * `setLineWidth($index, $width)`, sets the width of the $index-nt curve
-* `setLineMode($index, $mode)`, sets the line mode of the $index-nt curve
+* `setLineMode($index, $mode)`, sets the line mode of the $index-nt curve (set to `GnuPlot::LINEMODE_FILLEDCURVES` to fill an area between two lines)
 * `setLinePoint($index, $point)`, sets the line point of the $index-nt curve
 * `setLineType($index, $type)`, sets the line type of the $index-nt curve (for example to change the line's color)
 * `setLineSmooth($index, $smooth)`, sets the smooth type of the $index-nt curve. Available smooths are `SMOOTH_NONE`, `SMOOTH_BEZIER`, `SMOOTH_CSPLINE`, defined as constants on the `GnuPlot` class.
