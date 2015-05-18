@@ -37,6 +37,12 @@ class GnuPlot {
     // Plot height
     protected $height = 800;
 
+    // Canvas height
+    protected $canvasHeight;
+
+    // Canvas width
+    protected $canvasWidth;
+
     // Default sleep time
     protected $sleepTime = 5000;
     
@@ -81,6 +87,9 @@ class GnuPlot {
 
     // Y range scale
     protected $yrange;
+
+    // Graph Origin
+    protected $origin;
 
     // X tics
     protected $xtics;
@@ -151,6 +160,7 @@ class GnuPlot {
         $this->lineModes = array();
         $this->lineTypes = array();
         $this->lineSmooths = array();
+        $this->origin = array(0,0);
         $this->xrange = null;
         $this->yrange = null;
         $this->xtics = null;
@@ -178,6 +188,16 @@ class GnuPlot {
     public function setYRange($min, $max)
     {
         $this->yrange = array($min, $max);
+
+        return $this;
+    }
+
+    /**
+     * Sets the graph origin in the canvas
+     */
+    public function setOrigin($min, $max)
+    {
+        $this->origin = array($min, $max);
 
         return $this;
     }
@@ -325,6 +345,26 @@ class GnuPlot {
     }
 
     /**
+     * Sets the canvas width
+     */
+    public function setCanvasWidth($width)
+    {
+        $this->canvasWidth = $width;
+
+        return $this;
+    }
+
+    /**
+     * Sets the canvas height
+     */
+    public function setCanvasHeight($height)
+    {
+        $this->canvasHeight = $height;
+
+        return $this;
+    }
+
+    /**
      * Sets the sleep time
      */
     public function setSleepTime($sleepTime)
@@ -375,6 +415,10 @@ class GnuPlot {
 
         if ($this->xlabel) {
             $this->sendCommand('set xlabel "'.$this->xlabel.'"');
+        }
+
+        if ($this->origin) {
+            $this->sendCommand('set origin ' . current($this->origin) . ', ' . next($this->origin));
         }
 
         if ($this->timeFormat) {
@@ -441,10 +485,18 @@ class GnuPlot {
      * Write the current plot to a file
      */
     public function write($terminal, $file)
-    {
+    {   
+        $height = $this->canvasHeight ?: $this->height;
+        $width = $this->canvasWidth ?: $this->width;
+
         $this->sendInit();
-        $this->sendCommand("set terminal $terminal size {$this->width}{$this->unit}, {$this->height}{$this->unit}");
+        $this->sendCommand("set terminal $terminal size {$width}{$this->unit}, {$height}{$this->unit}");
         $this->sendCommand('set output "'.$file.'"');
+
+        if ($this->canvasWidth && $this->canvasHeight) {
+            $this->sendCommand("set size {$this->width}, {$this->height}");
+        }
+
         $this->plot();
         
         // Flush the output as described here: http://www.gnuplot.info/faq/faq.html#x1-840007.6
@@ -481,8 +533,16 @@ class GnuPlot {
      */
     public function get($format = self::TERMINAL_PNG)
     {
+        $height = $this->canvasHeight ?: $this->height;
+        $width = $this->canvasWidth ?: $this->width;
+
         $this->sendInit();
-        $this->sendCommand("set terminal $format size {$this->width}{$this->unit}, {$this->width}{$this->unit}");
+        $this->sendCommand("set terminal $format size {$width}{$this->unit}, {$width}{$this->unit}");
+
+        if ($this->canvasWidth && $this->canvasHeight) {
+            $this->sendCommand("set size {$this->width} {$this->height}");
+        }
+
         fflush($this->stdout);
         $this->plot();
 
