@@ -118,7 +118,7 @@ API
 * `setLineSmooth($index, $smooth)`, sets the smooth type of the $index-nt curve. Available smooths are `SMOOTH_NONE`, `SMOOTH_BEZIER`, `SMOOTH_CSPLINE`, defined as constants on the `GnuPlot` class.
 * `setGraphTitle($title)`, sets the main title for the graph
 * `setXTimeFormat($format)`, sets the X axis as a time axis and specify data format
-* `setXTimeFormatString($format)`, specify the X axis time presentation format
+* `setTimeFormatString($format)`, specify the X axis time presentation format
 * `setXLabel($text)`, sets the label for the X axis
 * `setYLabel($text)`, sets the label for the Y axis
 * `setYFormat($format)`, sets Y axis formatting
@@ -130,9 +130,9 @@ API
 * `setMYTics($tics)`, set the micro Y tics
 * `setMinorGrid($status)`, enabled/disables the grid for microtics
 * `setWidth($width)`, sets the width of the graph
-* `setHeight($height)`, sets the width of the graph
+* `setHeight($height)`, sets the height of the graph
 * `setCanvasWidth($width)`, sets the width of the canvas (if not set, the width value is used)
-* `setCanvasHeight($height)`, sets the width of the canvas (if not set, the height value is used)
+* `setCanvasHeight($height)`, sets the height of the canvas (if not set, the height value is used)
 * `setOrigin($x, $y)`, sets the origin of the graph
 * `setSleepTime($sleepTime)`, sets the sleep time after saving a file
 * `addLabel($x, $y, $text)`, add some label at a point
