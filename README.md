@@ -130,7 +130,7 @@ API
 * `setMXTics($tics)`, set the micro X tics
 * `setMYTics($tics)`, set the micro Y tics
 * `setMinorGrid($status)`, enabled/disables the grid for microtics
-* `setGridPlacement($layer)`, sets the placement of the grid, can be GnuPlot::GRID_DEFAULT, GnuPlot::GRID_FRONT or GnuPlot::GRID_BACK
+* `setGridPlacement($layer)`, sets the placement of the grid, can be `GnuPlot::GRID_DEFAULT`, `GnuPlot::GRID_FRONT` or `GnuPlot::GRID_BACK`
 * `setWidth($width)`, sets the width of the graph
 * `setHeight($height)`, sets the height of the graph
 * `setCanvasWidth($width)`, sets the width of the canvas (if not set, the width value is used)
