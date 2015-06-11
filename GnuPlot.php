@@ -8,12 +8,16 @@ class GnuPlot {
     
     // Available terminals
     const TERMINAL_PNG  = 'png';
-    const TERMINAL_PDF  = 'pdf';
+    const TERMINAL_PDF  = 'pdf dashed';
     const TERMINAL_EPS  = 'eps';
 
     const SMOOTH_NONE   = null;
     const SMOOTH_SPLINE = 'cspline';
     const SMOOTH_BEZIER = 'bezier';
+
+    const GRID_FRONT    = 'front';
+    const GRID_BACK     = 'back';
+    const GRID_DEFAULT  = 'layerdefault';
 
     const LINEMODE_FILLEDCURVES = 'filledcurves';
 
@@ -55,6 +59,9 @@ class GnuPlot {
     // Should draw grid for minor ticks
     protected $minorGrid = false;
 
+    // Grid placement (front, back, layerdefault)
+    protected $gridPlacement;
+
     // X Label
     protected $xlabel;
 
@@ -78,6 +85,9 @@ class GnuPlot {
 
     // Line Types
     protected $lineTypes;
+
+    // Line Colors
+    protected $lineColors;
 
     // Smooth Mode
     protected $lineSmooths;
@@ -159,6 +169,7 @@ class GnuPlot {
         $this->linePoints = array();
         $this->lineModes = array();
         $this->lineTypes = array();
+        $this->lineColors = array();
         $this->lineSmooths = array();
         $this->origin = array(0,0);
         $this->xrange = null;
@@ -168,6 +179,7 @@ class GnuPlot {
         $this->mxtics = null;
         $this->mytics = null;
         $this->minorGrid = false;
+        $this->gridPlacement = self::GRID_DEFAULT;
         $this->title = null;
         $this->key = null;
     }
@@ -253,6 +265,16 @@ class GnuPlot {
     }
 
     /**
+     * Specifies the layer for the grid
+     */
+    public function setGridPlacement($layer)
+    {
+        $this->gridPlacement = $layer;
+
+        return $this;
+    }
+
+    /**
      * Push a new data, $x is a number, $y can be a number or an array
      * of numbers
      */
@@ -311,6 +333,15 @@ class GnuPlot {
      */
     public function setLineType($index, $type) {
         $this->lineTypes[$index] = $type;
+        
+        return $this;
+    }
+
+    /**
+     * Sets the line color of the $index th curve in the plot
+     */
+    public function setLineColor($index, $color) {
+        $this->lineColors[$index] = $color;
         
         return $this;
     }
@@ -403,6 +434,8 @@ class GnuPlot {
         if ($this->minorGrid === true) {
             $gridCommand .= ' mxtics mytics';
         }
+        $gridCommand .= ' ' . $this->gridPlacement;
+
         $this->sendCommand($gridCommand);
 
         if ($this->title) {
@@ -675,6 +708,10 @@ class GnuPlot {
 
             if (isset($this->lineTypes[$i])) {
                 $using .= ' lt ' . $this->lineTypes[$i];
+            }
+
+            if (isset($this->lineColors[$i])) {
+                $using .= ' lc ' . $this->lineColors[$i];
             }
 
             if (isset($this->lineWidths[$i])) {
