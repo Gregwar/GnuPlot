@@ -570,7 +570,7 @@ class GnuPlot {
         $width = $this->canvasWidth ?: $this->width;
 
         $this->sendInit();
-        $this->sendCommand("set terminal $format size {$width}{$this->unit}, {$width}{$this->unit}");
+        $this->sendCommand("set terminal $format size {$width}{$this->unit}, {$height}{$this->unit}");
 
         if ($this->canvasWidth && $this->canvasHeight) {
             $this->sendCommand("set size {$this->width} {$this->height}");
