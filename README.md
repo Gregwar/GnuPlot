@@ -114,7 +114,8 @@ API
 * `setLineWidth($index, $width)`, sets the width of the $index-nt curve
 * `setLineMode($index, $mode)`, sets the line mode of the $index-nt curve (set to `GnuPlot::LINEMODE_FILLEDCURVES` to fill an area between two lines)
 * `setLinePoint($index, $point)`, sets the line point of the $index-nt curve
-* `setLineType($index, $type)`, sets the line type of the $index-nt curve (for example to change the line's color)
+* `setLineType($index, $type)`, sets the line type of the $index-nt curve
+* `setLineColor($index, $color)`, sets the line color of the $index-nt curve
 * `setLineSmooth($index, $smooth)`, sets the smooth type of the $index-nt curve. Available smooths are `SMOOTH_NONE`, `SMOOTH_BEZIER`, `SMOOTH_CSPLINE`, defined as constants on the `GnuPlot` class.
 * `setGraphTitle($title)`, sets the main title for the graph
 * `setXTimeFormat($format)`, sets the X axis as a time axis and specify data format
@@ -129,6 +130,7 @@ API
 * `setMXTics($tics)`, set the micro X tics
 * `setMYTics($tics)`, set the micro Y tics
 * `setMinorGrid($status)`, enabled/disables the grid for microtics
+* `setGridPlacement($layer)`, sets the placement of the grid, can be GnuPlot::GRID_DEFAULT, GnuPlot::GRID_FRONT or GnuPlot::GRID_BACK
 * `setWidth($width)`, sets the width of the graph
 * `setHeight($height)`, sets the height of the graph
 * `setCanvasWidth($width)`, sets the width of the canvas (if not set, the width value is used)
