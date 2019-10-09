@@ -232,7 +232,6 @@ class GnuPlot
     {
         $command .= PHP_EOL;
         fwrite($this->stdin, $command);
-        echo $command;
     }
 
     public function flush(): void
