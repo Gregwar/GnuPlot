@@ -1,10 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 
-include ('../GnuPlot.php');
+include('../GnuPlot.php');
 
 use Gregwar\GnuPlot\GnuPlot;
 
-$plot = new GnuPlot;
+$plot = new GnuPlot();
 
 $plot
     // Setting graph main title
@@ -32,5 +32,5 @@ $plot
     // Pointing out a value
     ->addLabel(2, 4.3, 'An important point')
     // Writing to out.png
-    ->writePng('out.png');
-
+    ->writePng('out.png')
+;

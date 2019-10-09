@@ -1,10 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 
-include ('../GnuPlot.php');
+include('../GnuPlot.php');
 
 use Gregwar\GnuPlot\GnuPlot;
 
-$plot = new GnuPlot;
+$plot = new GnuPlot();
 
 header('Content-type: image/png');
 
@@ -20,5 +20,5 @@ echo $plot
     ->push(3, 2.6)
     ->push(4, 5.3)
     ->setTitle(0, 'Demo')
-    ->get();
-
+    ->get()
+;
