@@ -3,6 +3,10 @@ GnuPlot
 
 A PHP Library for using GnuPlot
 
+**WARNING: This invoke the `gnuplot` command line as back-end, which can lead to
+arbitrary code execution. Be careful if you intend to use this library with
+user-provided information. Have a look at [this post](https://stackoverflow.com/questions/10937597/security-risks-of-gnuplot-web-interface) for more information.**
+
 This is the output of the `demo/write.php`:
 
 ![gnuplot](demo/out.png)
