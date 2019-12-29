@@ -1,10 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 
-include ('../GnuPlot.php');
+include('../GnuPlot.php');
 
 use Gregwar\GnuPlot\GnuPlot;
 
-$plot = new GnuPlot;
+$plot = new GnuPlot();
 
 $plot
     ->setXLabel('Date')
@@ -24,4 +24,4 @@ $plot
     ->setWidth(400)
     ->setHeight(300)
     ->writePng('date.png')
-    ;
+;

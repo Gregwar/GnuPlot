@@ -1,10 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 
-include ('../GnuPlot.php');
+include('../GnuPlot.php');
 
 use Gregwar\GnuPlot\GnuPlot;
 
-$plot = new GnuPlot;
+$plot = new GnuPlot();
 
 $plot
     ->setXLabel('X')
@@ -17,6 +17,7 @@ $plot
     ->push(3, 2.6)
     ->push(4, 5.3)
     ->setTitle(0, 'The curve')
-    ->display();
+    ->display()
+;
 
 sleep(1000);
