@@ -181,6 +181,7 @@ class GnuPlot {
     protected function sendInit()
     {
         $this->sendCommand('set grid');
+        $this->sendCommand('set terminal dumb');
 
         if ($this->title) {
             $this->sendCommand('set title "'.$this->title.'"');
