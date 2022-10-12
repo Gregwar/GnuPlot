@@ -276,7 +276,7 @@ class GnuPlot {
     public function get($format = self::TERMINAL_PNG)
     {
         $this->sendInit();
-		$this->sendCommand("set terminal $format size {$this->width}{$this->unit}, {$this->width}{$this->unit}");
+		$this->sendCommand("set terminal $format size {$this->width}{$this->unit}, {$this->height}{$this->unit}");
         fflush($this->stdout);
         $this->plot();
 
